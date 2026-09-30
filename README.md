@@ -45,22 +45,41 @@ This is a practical version of a ReAct-style loop: think, act, observe, improve.
 
 ## AI and ML in the project
 
-### Retrieval
-The main retrieval system uses TF-IDF and SVD (latent semantic analysis). It is implemented in the vector store module used for indexing and similarity search.
+Veridoc deliberately mixes two different kinds of "intelligence," and it's
+worth being precise about which is which:
 
-This is classic ML for document search. The model is trained on the corpus itself, and similarity is computed using cosine similarity, which is the same idea as embedding-based retrieval in a more lightweight form.
+- **ML (machine learning)** — statistical/mathematical techniques that
+  operate on data: vectorizing text, reducing dimensions, measuring
+  similarity, detecting regions in an image. Nothing here is a neural
+  network trained on external data; it's fit directly on your own corpus
+  at index time.
+- **AI (agentic logic)** — the orchestration layer on top: deciding what to
+  search for, when to retry, when to trust an answer. This is structured,
+  rule-based decision logic that mimics the *shape* of an LLM agent
+  (plan → act → observe → improve) without an LLM underneath it.
 
-### Computer vision
-The figure/table detection step uses OpenCV to process rendered PDF pages, find candidate regions, and crop them. This is implemented in the ingestion pipeline and is a good example of classical CV instead of a downloaded detector model.
+### Machine learning components — what's used, where
 
-### Agent-style reasoning
-The reasoning loop is a simplified agent workflow. It does not rely on a large language model. Instead, it explicitly plans, retrieves, answers, and criticizes.
+| Component | Technique / library | Where it lives | What it does |
+|---|---|---|---|
+| Text retrieval | TF-IDF (term weighting) + Truncated SVD / LSA — `scikit-learn` | `aiml/retrieval/vector_store.py` | Converts chunk text into vectors, fit on your own corpus; search is a cosine-similarity dot product between query and chunk vectors |
+| Extractive answering | TF-IDF sentence scoring — `scikit-learn` | `aiml/agents/critic.py` | Scores every candidate sentence against the question, keeps the top matches as the "answer" |
+| Figure/table detection | Classical computer vision — adaptive thresholding, morphological dilation, contour detection — `OpenCV` | `aiml/ingestion/layout_detector.py` | Finds figure/table-shaped regions on a rendered page without a trained detector model |
+| Cross-modal figure matching | Page co-location (reuses the TF-IDF retrieval scores above) | `aiml/agents/retriever_agent.py` | Surfaces figures from whichever pages best matched the question textually |
+| Self-attention (educational) | Raw matrix ops — `Q·Kᵀ`, softmax, weighted sum — `PyTorch` | `aiml/models/attention_from_scratch.py` | Standalone demo of the mechanism behind transformer attention; not wired into the main answer pipeline |
 
-### Critic / confidence check
-The critic is intentionally rule-based rather than LLM-based. It checks whether the answer is well supported by the evidence and whether the retrieval signal is strong enough. If it is not, it reformulates the question and tries again.
+### AI / agentic components — what's used, where
 
-### Optional learning demo
-There is also a PyTorch example in the attention demo module that shows how self-attention works without using a library shortcut.
+| Component | Approach | Where it lives | What it does |
+|---|---|---|---|
+| Planner | Rule-based question decomposition (regex conjunction-splitting + keyword extraction) | `aiml/agents/planner.py` | Breaks one question into 1–3 sub-queries; three modes (`zero_shot` / `few_shot` / `cot`) vary how aggressively it decomposes |
+| Retriever agent | Tool-use wrapper around the ML retrieval store | `aiml/agents/retriever_agent.py` | Exposes retrieval as a callable "tool" the loop can invoke and log |
+| Critic | Rule-based confidence scoring (retrieval-score strength + question/answer keyword overlap) | `aiml/agents/critic.py` | Decides whether an answer is good enough, or proposes a reformulated query if not |
+| ReAct loop | Explicit Thought → Action → Observation orchestration with a retry cap | `aiml/agents/react_loop.py` | Ties Planner → Retriever → Answerer → Critic together, re-running the search when confidence is low |
+
+No component in either table calls an external API or downloads model
+weights at runtime — every number above is computed locally, either fit on
+your corpus at index time (ML) or evaluated by fixed rules at query time (AI).
 
 ## Why this is useful
 
