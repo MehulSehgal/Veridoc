@@ -1,0 +1,23 @@
+# Fully local pipeline -- no API key, no Hugging Face account, no model
+# downloads at runtime. Everything here is a plain `pip install`.
+
+pypdf>=4.0.0
+pymupdf>=1.24.0
+pillow>=10.0.0
+opencv-python-headless>=4.9.0
+numpy>=1.26.0
+scipy>=1.11.0
+scikit-learn>=1.4.0
+streamlit>=1.35.0
+tqdm>=4.66.0
+
+# HTML/CSS/JS frontend backend (web/server.py) -- an alternative to the
+# Streamlit UI above; use whichever you prefer, both hit the same agents.
+fastapi>=0.110.0
+uvicorn>=0.29.0
+
+# Only needed for models/attention_from_scratch.py (the from-scratch
+# self-/cross-attention demo). Not required for ingestion, retrieval,
+# the agent loop, or the UI -- skip it if you don't need that one script.
+torch>=2.2.0
+matplotlib>=3.8.0

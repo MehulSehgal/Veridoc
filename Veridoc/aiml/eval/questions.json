@@ -1,0 +1,10 @@
+[
+  {
+    "question": "What loss function is used for training?",
+    "expected_keywords": ["cross-entropy", "loss"]
+  },
+  {
+    "question": "What is the main limitation of the model?",
+    "expected_keywords": ["limitation", "dataset"]
+  }
+]

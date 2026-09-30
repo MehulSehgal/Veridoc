@@ -1,0 +1,258 @@
+/*
+  Visual identity: a research investigator's case board. This prototype is
+  intentionally styled as a printed dossier: paper textures, restrained color,
+  and a classical serif type system to feel like a real case file.
+
+  Type note:
+    This prototype uses classic serif typography throughout for a more
+    human, editorial feel. Times New Roman is the primary family used on the
+    visible prototype, with Georgia as a sensible fallback.
+*/
+
+:root {
+    --bg: #14181C;
+    --panel: #1B2127;
+    --panel-border: #2A323A;
+    --paper: #EDE6D6;
+    --paper-text: #2B2620;
+    --ink: #4C8577;
+    --ink-soft: #6BA093;
+    --rust: #B5541F;
+    --text: #E7E2D3;
+    --text-dim: #8B9198;
+    --serif-font: "Times New Roman", Times, Georgia, serif;
+    --mono-font: "Courier New", Courier, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif-font);
+    -webkit-font-smoothing: antialiased;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+}
+
+/* ===== sidebar ===== */
+.sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--panel-border);
+    padding: 1.6rem 1.4rem;
+}
+.sidebar-label {
+    font-family: var(--serif-font);
+    font-size: 1.15rem;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.1rem;
+}
+.field-label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin: 0.9rem 0 0.35rem;
+    font-family: var(--serif-font);
+}
+.case-status {
+    margin-top: 1.2rem;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+.case-status.status-ok { color: var(--ink-soft); }
+.case-status.status-error { color: var(--rust); }
+
+/* ===== main ===== */
+.main {
+    padding: 2.4rem 3rem;
+    max-width: 980px;
+}
+.case-title {
+    font-family: var(--serif-font);
+    font-weight: 500;
+    font-size: 2.4rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.3rem;
+    line-height: 1.1;
+}
+.case-subtitle {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    max-width: 62ch;
+    margin: 0 0 1.6rem;
+    line-height: 1.5;
+    font-family: var(--serif-font);
+}
+
+/* ===== inputs ===== */
+.text-input, .select-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    border-radius: 6px;
+    font-family: var(--serif-font);
+    font-size: 0.92rem;
+    padding: 0.6rem 0.8rem;
+}
+.text-input:focus, .select-input:focus {
+    outline: none;
+    border-color: var(--ink);
+    box-shadow: 0 0 0 1px var(--ink);
+}
+.question-row {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.4rem;
+}
+.question-input { font-size: 1.02rem; padding: 0.7rem 0.9rem; }
+
+/* ===== buttons ===== */
+.btn {
+    border: none;
+    border-radius: 6px;
+    font-family: var(--serif-font);
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 0.6rem 1.3rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    white-space: nowrap;
+}
+.btn-primary { background: var(--ink); color: #0F1512; }
+.btn-primary:hover { background: var(--ink-soft); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.full-width { width: 100%; margin-top: 0.9rem; }
+
+/* ===== status/error/loading ===== */
+.error-banner {
+    background: rgba(181, 84, 31, 0.12);
+    border: 1px solid var(--rust);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 0.8rem 1rem;
+    font-size: 0.88rem;
+    margin-bottom: 1.2rem;
+    white-space: pre-wrap;
+    font-family: var(--serif-font);
+}
+.loading-note {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 1.2rem;
+    font-style: italic;
+    font-family: var(--serif-font);
+}
+
+/* ===== results layout ===== */
+.columns {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 2.2rem;
+    margin-bottom: 1.8rem;
+}
+.panel-heading {
+    font-family: var(--serif-font);
+    font-size: 1.05rem;
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--panel-border);
+}
+
+/* ===== trace timeline ===== */
+.trace-list {
+    position: relative;
+    padding-left: 1.4rem;
+    border-left: 2px solid var(--panel-border);
+}
+.trace-step {
+    position: relative;
+    margin-bottom: 1.15rem;
+    padding-left: 0.9rem;
+}
+.trace-step::before {
+    content: '';
+    position: absolute;
+    left: -1.62rem;
+    top: 0.35rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--panel);
+    border: 2px solid var(--ink);
+}
+.trace-step.retry::before { border-color: var(--rust); }
+.trace-label {
+    font-family: var(--mono-font);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.15rem;
+}
+.trace-step.retry .trace-label { color: var(--rust); }
+.trace-content {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    font-family: var(--serif-font);
+}
+
+/* ===== evidence / figure cards (paper tone) ===== */
+.figure-card {
+    background: var(--paper);
+    color: var(--paper-text);
+    border-radius: 3px;
+    padding: 0.5rem;
+    margin-bottom: 0.9rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.28);
+}
+.figure-card img {
+    width: 100%;
+    display: block;
+    border-radius: 2px;
+}
+.figure-caption {
+    font-family: var(--mono-font);
+    font-size: 0.68rem;
+    color: #6B6152;
+    margin-top: 0.4rem;
+    text-align: center;
+}
+.no-figures-note { color: var(--text-dim); font-size: 0.88rem; font-family: var(--serif-font); }
+
+/* ===== verdict / confidence ring ===== */
+.verdict-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 1.3rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.3rem;
+}
+.verdict-text {
+    font-size: 1.02rem;
+    line-height: 1.55;
+    font-family: var(--serif-font);
+}
+.verdict-meta {
+    font-family: var(--mono-font);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+}
+.confidence-ring svg { display: block; }
+
+@media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--panel-border); }
+    .columns { grid-template-columns: 1fr; }
+    .main { padding: 1.6rem; }
+}

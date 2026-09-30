@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veridoc — The Investigation Desk</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-label">Case file</div>
+
+    <label class="field-label" for="indexDir">Index directory</label>
+    <input id="indexDir" class="text-input" type="text" value="data/index">
+
+    <label class="field-label" for="strategy">Planner reasoning mode</label>
+    <select id="strategy" class="select-input">
+      <option value="cot">Chain of thought</option>
+      <option value="few_shot">Few-shot</option>
+      <option value="zero_shot">Zero-shot</option>
+    </select>
+
+    <button id="openCaseBtn" class="btn btn-primary full-width">Open case file</button>
+
+    <div id="caseStatus" class="case-status">No case file open yet.</div>
+  </aside>
+
+  <main class="main">
+    <h1 class="case-title">The investigation desk</h1>
+    <p class="case-subtitle">
+      Ask a question about the papers in this case file. The Planner breaks it down,
+      the Retriever pulls evidence — text and figures — and the Critic checks the
+      answer before signing off, reopening the search if it isn't convinced.
+    </p>
+
+    <div class="question-row">
+      <input id="question" class="text-input question-input" type="text"
+             placeholder="e.g. What loss function does the paper use, and why?">
+      <button id="investigateBtn" class="btn btn-primary">Open investigation</button>
+    </div>
+
+    <div id="errorBanner" class="error-banner" hidden></div>
+    <div id="loading" class="loading-note" hidden>Following the trail…</div>
+
+    <section id="results" class="results" hidden>
+      <div class="columns">
+        <div class="panel">
+          <div class="panel-heading">Investigation trace</div>
+          <div id="trace" class="trace-list"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading">Evidence pulled</div>
+          <div id="figures" class="figures-list"></div>
+        </div>
+      </div>
+
+      <div class="verdict-card">
+        <div id="confidenceRing" class="confidence-ring"></div>
+        <div class="verdict-body">
+          <div id="finalAnswer" class="verdict-text"></div>
+          <div id="verdictMeta" class="verdict-meta"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
