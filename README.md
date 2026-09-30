@@ -46,7 +46,7 @@ This is a practical version of a ReAct-style loop: think, act, observe, improve.
 ## AI and ML in the project
 
 ### Retrieval
-The main retrieval system uses TF-IDF and SVD (latent semantic analysis). It is implemented in [retrieval/vector_store.py](retrieval/vector_store.py).
+The main retrieval system uses TF-IDF and SVD (latent semantic analysis). It is implemented in the vector store module used for indexing and similarity search.
 
 This is classic ML for document search. The model is trained on the corpus itself, and similarity is computed using cosine similarity, which is the same idea as embedding-based retrieval in a more lightweight form.
 
@@ -54,13 +54,13 @@ This is classic ML for document search. The model is trained on the corpus itsel
 The figure/table detection step uses OpenCV to process rendered PDF pages, find candidate regions, and crop them. This is implemented in the ingestion pipeline and is a good example of classical CV instead of a downloaded detector model.
 
 ### Agent-style reasoning
-The reasoning loop in [agents/react_loop.py](agents/react_loop.py) is a simplified agent workflow. It does not rely on a large language model. Instead, it explicitly plans, retrieves, answers, and criticizes.
+The reasoning loop is a simplified agent workflow. It does not rely on a large language model. Instead, it explicitly plans, retrieves, answers, and criticizes.
 
 ### Critic / confidence check
 The critic is intentionally rule-based rather than LLM-based. It checks whether the answer is well supported by the evidence and whether the retrieval signal is strong enough. If it is not, it reformulates the question and tries again.
 
 ### Optional learning demo
-There is also a PyTorch example in [models/attention_from_scratch.py](models/attention_from_scratch.py) that shows how self-attention works without using a library shortcut.
+There is also a PyTorch example in the attention demo module that shows how self-attention works without using a library shortcut.
 
 ## Why this is useful
 
@@ -113,7 +113,7 @@ It is a good prototype for understanding how retrieval, document processing, and
 ### Folder layout
 
 ```text
-argus_rag/
+Veridoc/
 ├── aiml/
 │   ├── agents/
 │   ├── eval/
